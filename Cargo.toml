@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = [ "order-service/order-application", "order-service/order-container", "order-service/order-dataaccess",
+members = [ "common", "order-service/order-application", "order-service/order-container", "order-service/order-dataaccess",
   "order-service/order-domain/domain-core",
   "order-service/order-domain/domain-service", "order-service/order-messaging",
 ]
