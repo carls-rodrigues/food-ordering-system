@@ -1,0 +1,15 @@
+[package]
+name = "order-container"
+version = "0.1.0"
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+order-application = { path = "../order-application" }
+order-domain-core = { path = "../order-domain/domain-core" }
+order-domain-service = { path = "../order-domain/domain-service" }
+order-messaging = { path = "../order-messaging" }
+order-dataaccess = { path = "../order-dataaccess" }
