@@ -9,7 +9,9 @@ pub struct Money {
 
 impl Money {
     pub fn new(amount: BigDecimal) -> Self {
-        Self { amount }
+        Self {
+            amount: amount.with_scale(2),
+        }
     }
 
     pub fn is_greater_than_zero(&self) -> bool {
