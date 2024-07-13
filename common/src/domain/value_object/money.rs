@@ -10,7 +10,7 @@ pub struct Money {
 impl Money {
     pub fn new(amount: BigDecimal) -> Self {
         Self {
-            amount: amount.with_scale(2),
+            amount: amount.with_scale_round(2, bigdecimal::RoundingMode::HalfEven),
         }
     }
 
