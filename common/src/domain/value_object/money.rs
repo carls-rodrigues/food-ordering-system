@@ -1,16 +1,18 @@
 use std::ops::{Add, Div, Mul, Sub};
 
-use bigdecimal::{BigDecimal, Signed};
+use bigdecimal::{BigDecimal, Signed, Zero};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Money {
     amount: BigDecimal,
+    zero: BigDecimal,
 }
 
 impl Money {
     pub fn new(amount: BigDecimal) -> Self {
         Self {
             amount: amount.with_scale_round(2, bigdecimal::RoundingMode::HalfEven),
+            zero: BigDecimal::zero(),
         }
     }
 
@@ -49,6 +51,10 @@ impl Money {
     }
     pub fn get_amount(&self) -> &BigDecimal {
         &self.amount
+    }
+
+    pub fn get_zero(&self) -> &BigDecimal {
+        &self.zero
     }
 }
 
