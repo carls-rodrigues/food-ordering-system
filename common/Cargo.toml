@@ -7,4 +7,4 @@ license.workspace = true
 
 [dependencies]
 bigdecimal = "0.4.5"
-uuid = { version = "1.10.0", features = ["v7"] }
+uuid = { version = "1.10.0", features = ["v7", "serde"] }
