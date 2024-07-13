@@ -11,13 +11,14 @@ mod aggregate_root_tests {
         struct ConcreteAggregateRoot<ID> {
             id: ID,
         }
+        impl ConcreteAggregateRoot<i32> {
+            fn new(id: i32) -> Self {
+                Self { id }
+            }
+        }
         impl<ID: PartialEq> BaseEntity<ID> for ConcreteAggregateRoot<ID> {
             fn get_id(&self) -> &ID {
                 &self.id
-            }
-
-            fn new(id: ID) -> Self {
-                Self { id }
             }
 
             fn set_id(&mut self, id: ID) {
