@@ -20,7 +20,7 @@ fn main() {
             "New York".to_string(),
         ),
         price: Money::new(BigDecimal::from_str("100").unwrap()),
-        items: vec![OrderItem::new(
+        items: vec![OrderItem::from(
             OrderItemId::new(uuid::Uuid::now_v7()),
             OrderId::new(uuid::Uuid::now_v7()),
             Product::new(
@@ -36,6 +36,6 @@ fn main() {
         order_status: OrderStatus::Pending,
         failure_messages: vec![],
     };
-    let order = Order::<OrderId<uuid::Uuid>>::new(order_data);
+    let order = Order::from(order_data);
     println!("{:#?}", order)
 }
