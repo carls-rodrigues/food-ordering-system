@@ -1,15 +1,16 @@
 use super::base_id::BaseId;
 
+#[derive(Debug, PartialEq)]
 pub struct ProductId<T>
 where
-    T: From<uuid::Uuid> + Into<uuid::Uuid>,
+    T: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq,
 {
     id: T,
 }
 
 impl<T> BaseId<T> for ProductId<T>
 where
-    T: From<uuid::Uuid> + Into<uuid::Uuid>,
+    T: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq,
 {
     fn new(id: T) -> Self {
         Self { id }
