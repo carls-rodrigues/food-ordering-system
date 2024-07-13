@@ -7,3 +7,6 @@ license.workspace = true
 
 [dependencies]
 common = { path = "../../../common" }
+getset = "0.1.2"
+uuid = { version = "1.10.0", features = ["v7", "serde"] }
+bigdecimal = "0.4.5"
