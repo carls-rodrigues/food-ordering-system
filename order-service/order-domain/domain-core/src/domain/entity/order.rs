@@ -2,7 +2,7 @@ use common::domain::{
     entity::{AggregateRoot, BaseEntity},
     value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, RestaurantId},
 };
-use getset::Getters;
+use getset::{Getters, MutGetters};
 
 use crate::domain::{
     exception::OrderDomainException,
@@ -23,7 +23,7 @@ pub struct OrderData {
     pub failure_messages: Vec<String>,
 }
 
-#[derive(Debug, Getters)]
+#[derive(Debug, Getters, MutGetters, Clone)]
 pub struct Order {
     id: OrderId<uuid::Uuid>,
     #[getset(get = "pub")]
@@ -34,7 +34,7 @@ pub struct Order {
     street_address: StreetAddress,
     #[getset(get = "pub")]
     price: Money,
-    #[getset(get = "pub")]
+    #[getset(get = "pub", get_mut = "pub")]
     items: Vec<OrderItem>,
     #[getset(get = "pub")]
     tracking_id: TrackingId<uuid::Uuid>,
@@ -147,7 +147,7 @@ impl Order {
         Ok(())
     }
     fn validate_initalize_order(&self) -> Result<(), OrderDomainException> {
-        if self.get_id().get_id().to_string().is_empty() {
+        if self.get_id().get_value().to_string().is_empty() {
             return Err(OrderDomainException::new(
                 "Order is not in correct state for initialization!".to_string(),
                 None,

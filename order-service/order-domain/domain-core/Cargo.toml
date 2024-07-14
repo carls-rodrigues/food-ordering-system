@@ -11,3 +11,5 @@ getset = "0.1.2"
 uuid = { version = "1.10.0", features = ["v7", "serde"] }
 bigdecimal = "0.4.5"
 chrono = { version = "0.4.38", features = ["serde"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"

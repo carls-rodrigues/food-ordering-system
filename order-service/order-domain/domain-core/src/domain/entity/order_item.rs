@@ -1,20 +1,20 @@
 use bigdecimal::BigDecimal;
 use common::domain::{
     entity::BaseEntity,
-    value_object::{BaseId, Money, OrderId},
+    value_object::{Money, OrderId},
 };
-use getset::Getters;
+use getset::{Getters, MutGetters};
 
 use crate::domain::value_object::OrderItemId;
 
 use super::Product;
 
-#[derive(Debug, Getters)]
+#[derive(Debug, Getters, MutGetters, Clone)]
 pub struct OrderItem {
     id: OrderItemId<uuid::Uuid>,
     #[getset(get = "pub")]
     order_id: OrderId<uuid::Uuid>,
-    #[getset(get = "pub")]
+    #[getset(get = "pub", get_mut = "pub")]
     product: Product<uuid::Uuid>,
     #[getset(get = "pub")]
     quantity: i32,

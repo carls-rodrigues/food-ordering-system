@@ -1,7 +1,7 @@
 use common::domain::{entity::BaseEntity, value_object::Money};
 use getset::Getters;
 
-#[derive(Debug, Getters)]
+#[derive(Debug, Getters, PartialEq, Eq, Hash, Clone)]
 pub struct Product<ID>
 where
     ID: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq,
@@ -16,6 +16,10 @@ where
 impl<ID: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq> Product<ID> {
     pub fn new(id: ID, name: String, price: Money) -> Self {
         Self { id, name, price }
+    }
+    pub fn update_with_confirmed_name_and_price(&mut self, name: &String, price: &Money) {
+        self.name = name.clone();
+        self.price = price.clone();
     }
 }
 

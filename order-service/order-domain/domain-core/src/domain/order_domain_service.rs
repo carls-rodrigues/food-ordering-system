@@ -10,16 +10,16 @@ pub trait OrderDomainService {
         order: Order,
         restaurant: Restaurant,
     ) -> Result<OrderCreatedEvent, OrderDomainException>;
-    fn pay_order(&self, order: Order) -> Result<OrderPaidEvent, OrderDomainException>;
-    fn approve_order(&self, order: Order) -> Result<(), OrderDomainException>;
+    fn pay_order(&self, order: &mut Order) -> Result<OrderPaidEvent, OrderDomainException>;
+    fn approve_order(&self, order: &mut Order) -> Result<(), OrderDomainException>;
     fn cancel_order_payment(
         &self,
-        order: Order,
+        order: &mut Order,
         failure_messages: Vec<String>,
     ) -> Result<OrderCancelledEvent, OrderDomainException>;
     fn cancel_order(
         &self,
-        order: Order,
+        order: &mut Order,
         failure_messages: Vec<String>,
     ) -> Result<(), OrderDomainException>;
 }
