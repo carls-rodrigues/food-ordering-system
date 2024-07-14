@@ -2,7 +2,7 @@ use std::ops::{Add, Div, Mul, Sub};
 
 use bigdecimal::{BigDecimal, Signed, Zero};
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Money {
     amount: BigDecimal,
     zero: BigDecimal,
