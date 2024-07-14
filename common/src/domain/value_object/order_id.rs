@@ -16,7 +16,7 @@ where
         Self { id }
     }
 
-    fn get_id(&self) -> &T {
+    fn get_value(&self) -> &T {
         &self.id
     }
 }
@@ -30,6 +30,6 @@ mod order_id_tests {
     fn test_order_id() {
         let id = Uuid::now_v7();
         let order_id = OrderId::new(id);
-        assert_eq!(order_id.get_id(), &id);
+        assert_eq!(order_id.get_value(), &id);
     }
 }
