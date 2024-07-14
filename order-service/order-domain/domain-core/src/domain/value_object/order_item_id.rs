@@ -1,6 +1,6 @@
 use common::domain::value_object::BaseId;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct OrderItemId<T> {
     id: T,
 }
