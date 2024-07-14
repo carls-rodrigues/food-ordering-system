@@ -1,6 +1,6 @@
 use super::base_id::BaseId;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct CustomerId<T>
 where
     T: From<uuid::Uuid> + Into<uuid::Uuid>,
@@ -16,7 +16,7 @@ where
         Self { id }
     }
 
-    fn get_id(&self) -> &T {
+    fn get_value(&self) -> &T {
         &self.id
     }
 }
@@ -30,6 +30,6 @@ mod customer_id_tests {
     fn test_customer_id() {
         let id = Uuid::now_v7();
         let customer_id = CustomerId::new(id);
-        assert_eq!(customer_id.get_id(), &id);
+        assert_eq!(customer_id.get_value(), &id);
     }
 }
