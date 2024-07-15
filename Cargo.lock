@@ -211,7 +211,7 @@ checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 name = "order-application"
 version = "0.1.0"
 dependencies = [
- "order-domain-service",
+ "order-domain-application-service",
 ]
 
 [[package]]
@@ -220,8 +220,8 @@ version = "0.1.0"
 dependencies = [
  "order-application",
  "order-dataaccess",
+ "order-domain-application-service",
  "order-domain-core",
- "order-domain-service",
  "order-messaging",
 ]
 
@@ -229,7 +229,14 @@ dependencies = [
 name = "order-dataaccess"
 version = "0.1.0"
 dependencies = [
- "order-domain-service",
+ "order-domain-application-service",
+]
+
+[[package]]
+name = "order-domain-application-service"
+version = "0.1.0"
+dependencies = [
+ "order-domain-core",
 ]
 
 [[package]]
@@ -246,17 +253,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "order-domain-service"
-version = "0.1.0"
-dependencies = [
- "order-domain-core",
-]
-
-[[package]]
 name = "order-messaging"
 version = "0.1.0"
 dependencies = [
- "order-domain-service",
+ "order-domain-application-service",
 ]
 
 [[package]]

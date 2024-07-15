@@ -10,6 +10,6 @@ license.workspace = true
 [dependencies]
 order-application = { path = "../order-application" }
 order-domain-core = { path = "../order-domain/domain-core" }
-order-domain-service = { path = "../order-domain/domain-service" }
+order-domain-application-service = { path = "../order-domain/domain-application-service" }
 order-messaging = { path = "../order-messaging" }
 order-dataaccess = { path = "../order-dataaccess" }
