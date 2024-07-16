@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use common::domain::{
     entity::BaseEntity,
-    value_object::{BaseId, Money},
+    value_object::{BaseId},
 };
 
 use super::{
@@ -35,14 +35,14 @@ impl OrderDomainServiceImpl {
         order: &mut Order,
         restaurant: &Restaurant,
     ) -> Result<(), OrderDomainException> {
-        let restaurant_products: HashMap<&uuid::Uuid, &Product<uuid::Uuid>> = restaurant
+        let restaurant_products = restaurant
             .products()
             .iter()
-            .map(|p| (p.get_id(), p))
-            .collect();
+            .map(|p| (p.get_id().get_value(), p.clone()))
+            .collect::<HashMap<&uuid::Uuid, Product>>();
 
         for order_item in order.items_mut() {
-            if let Some(restaurant_product) = restaurant_products.get(order_item.product().get_id())
+            if let Some(restaurant_product) = restaurant_products.get(order_item.product().get_id().get_value())
             {
                 order_item
                     .product_mut()

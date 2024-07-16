@@ -1,21 +1,23 @@
 use bigdecimal::BigDecimal;
+use derive_builder::Builder;
 use common::domain::{
     entity::BaseEntity,
     value_object::{Money, OrderId},
 };
 use getset::{Getters, MutGetters};
-
+use uuid::Uuid;
+use common::domain::value_object::BaseId;
 use crate::domain::value_object::OrderItemId;
 
 use super::Product;
 
-#[derive(Debug, Getters, MutGetters, Clone)]
+#[derive(Debug, Builder, Getters, MutGetters, Clone)]
 pub struct OrderItem {
-    id: OrderItemId<uuid::Uuid>,
+    id: OrderItemId<Uuid>,
     #[getset(get = "pub")]
-    order_id: OrderId<uuid::Uuid>,
+    order_id: Option<OrderId<Uuid>>,
     #[getset(get = "pub", get_mut = "pub")]
-    product: Product<uuid::Uuid>,
+    product: Product,
     #[getset(get = "pub")]
     quantity: i32,
     #[getset(get = "pub")]
@@ -25,10 +27,19 @@ pub struct OrderItem {
 }
 
 impl OrderItem {
+    pub fn new(
+        order_id: Option<OrderId<Uuid>>,
+        product: Product,
+        quantity: i32,
+        price: Money,
+        subtotal: Money,
+    ) -> Self {
+        Self::from(OrderItemId::new(Uuid::now_v7()), order_id, product, quantity, price, subtotal)
+    }
     pub fn from(
-        id: OrderItemId<uuid::Uuid>,
-        order_id: OrderId<uuid::Uuid>,
-        product: Product<uuid::Uuid>,
+        id: OrderItemId<Uuid>,
+        order_id: Option<OrderId<Uuid>>,
+        product: Product,
         quantity: i32,
         price: Money,
         subtotal: Money,
@@ -44,15 +55,15 @@ impl OrderItem {
     }
     pub fn initialize_order_item(
         &mut self,
-        order_id: &OrderId<uuid::Uuid>,
-        order_item_id: OrderItemId<uuid::Uuid>,
+        order_id: &OrderId<Uuid>,
+        order_item_id: OrderItemId<Uuid>,
     ) {
         self.id = order_item_id;
-        self.order_id = order_id.clone();
+        self.order_id = Some(order_id.clone());
     }
     pub fn is_price_valid(&self) -> bool {
         self.price.is_greater_than_zero()
-            && self.price.eq(self.product.price())
+            && self.price.eq(&self.product.price().clone().unwrap())
             && self
                 .price()
                 .multiply(Money::new(BigDecimal::from(self.quantity)))
@@ -60,12 +71,12 @@ impl OrderItem {
     }
 }
 
-impl BaseEntity<OrderItemId<uuid::Uuid>> for OrderItem {
-    fn get_id(&self) -> &OrderItemId<uuid::Uuid> {
+impl BaseEntity<OrderItemId<Uuid>> for OrderItem {
+    fn get_id(&self) -> &OrderItemId<Uuid> {
         &self.id
     }
 
-    fn set_id(&mut self, id: OrderItemId<uuid::Uuid>) {
+    fn set_id(&mut self, id: OrderItemId<Uuid>) {
         self.id = id;
     }
 }

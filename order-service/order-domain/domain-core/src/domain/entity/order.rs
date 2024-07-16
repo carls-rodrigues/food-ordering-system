@@ -1,3 +1,4 @@
+use derive_builder::Builder;
 use common::domain::{
     entity::{AggregateRoot, BaseEntity},
     value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, RestaurantId},
@@ -23,7 +24,7 @@ pub struct OrderData {
     pub failure_messages: Vec<String>,
 }
 
-#[derive(Debug, Getters, MutGetters, Clone)]
+#[derive(Debug, Builder, Getters, MutGetters, Clone)]
 pub struct Order {
     id: OrderId<uuid::Uuid>,
     #[getset(get = "pub")]
@@ -37,9 +38,9 @@ pub struct Order {
     #[getset(get = "pub", get_mut = "pub")]
     items: Vec<OrderItem>,
     #[getset(get = "pub")]
-    tracking_id: TrackingId<uuid::Uuid>,
+    tracking_id: Option<TrackingId<uuid::Uuid>>,
     #[getset(get = "pub")]
-    order_status: OrderStatus,
+    order_status: Option<OrderStatus>,
     #[getset(get = "pub")]
     failure_messages: Vec<String>,
 }
@@ -56,16 +57,16 @@ impl Order {
             street_address: order.street_address,
             price: order.price,
             items: order.items,
-            tracking_id: order.tracking_id,
-            order_status: order.order_status,
+            tracking_id: Some(order.tracking_id),
+            order_status: Some(order.order_status),
             failure_messages: order.failure_messages,
         }
     }
     pub fn initialize_order(&mut self) {
         let id = OrderId::new(uuid::Uuid::now_v7());
         self.id = id;
-        self.tracking_id = TrackingId::new(uuid::Uuid::now_v7());
-        self.order_status = OrderStatus::Pending;
+        self.tracking_id = Some(TrackingId::new(uuid::Uuid::now_v7()));
+        self.order_status = Some(OrderStatus::Pending);
         self.initialize_order_items();
     }
 
@@ -76,24 +77,24 @@ impl Order {
     }
 
     pub fn pay(&mut self) -> Result<(), OrderDomainException> {
-        if self.order_status != OrderStatus::Pending {
+        if self.order_status != Some(OrderStatus::Pending) {
             return Err(OrderDomainException::new(
                 "Order is not in correct state for payment operation!".to_string(),
                 None,
             ));
         }
-        self.order_status = OrderStatus::Paid;
+        self.order_status = Some(OrderStatus::Paid);
         Ok(())
     }
 
     pub fn approve(&mut self) -> Result<(), OrderDomainException> {
-        if self.order_status != OrderStatus::Paid {
+        if self.order_status != Some(OrderStatus::Paid) {
             return Err(OrderDomainException::new(
                 "Order is not in correct state for approval operation!".to_string(),
                 None,
             ));
         }
-        self.order_status = OrderStatus::Approved;
+        self.order_status = Some(OrderStatus::Approved);
         Ok(())
     }
 
@@ -101,27 +102,27 @@ impl Order {
         &mut self,
         failure_message: Vec<String>,
     ) -> Result<(), OrderDomainException> {
-        if self.order_status != OrderStatus::Paid {
+        if self.order_status != Some(OrderStatus::Paid) {
             return Err(OrderDomainException::new(
                 "Order is not in correct state for initCancel operation!".to_string(),
                 None,
             ));
         }
-        self.order_status = OrderStatus::Cancelling;
+        self.order_status = Some(OrderStatus::Cancelling);
         self.update_failure_messages(failure_message);
         Ok(())
     }
 
     pub fn cancel(&mut self, failure_message: Vec<String>) -> Result<(), OrderDomainException> {
-        if !(self.order_status == OrderStatus::Cancelling
-            || self.order_status == OrderStatus::Pending)
+        if !(self.order_status == Some(OrderStatus::Cancelling)
+            || self.order_status == Some(OrderStatus::Pending))
         {
             return Err(OrderDomainException::new(
                 "Order is not in correct state for cancel operation!".to_string(),
                 None,
             ));
         }
-        self.order_status = OrderStatus::Cancelled;
+        self.order_status = Some(OrderStatus::Cancelled);
         self.update_failure_messages(failure_message);
         Ok(())
     }
@@ -141,12 +142,12 @@ impl Order {
     }
 
     pub fn validate_order(&self) -> Result<(), OrderDomainException> {
-        self.validate_order()?;
+        self.validate_initialize_order()?;
         self.validate_total_price()?;
         self.validate_items_price()?;
         Ok(())
     }
-    fn validate_initalize_order(&self) -> Result<(), OrderDomainException> {
+    fn validate_initialize_order(&self) -> Result<(), OrderDomainException> {
         if self.get_id().get_value().to_string().is_empty() {
             return Err(OrderDomainException::new(
                 "Order is not in correct state for initialization!".to_string(),
@@ -190,7 +191,7 @@ impl Order {
             let message = format!(
                 "Order item price: {} is not valid for the product {}.",
                 order_item.price().get_amount(),
-                order_item.product().get_id()
+                order_item.product().get_id().get_value()
             );
             return Err(OrderDomainException::new(message, None));
         }

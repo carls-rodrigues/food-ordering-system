@@ -1,34 +1,32 @@
 use common::domain::{entity::BaseEntity, value_object::Money};
 use getset::Getters;
+use common::domain::value_object::ProductId;
 
 #[derive(Debug, Getters, PartialEq, Eq, Hash, Clone)]
-pub struct Product<ID>
-where
-    ID: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq,
-{
-    id: ID,
+pub struct Product {
+    id: ProductId<uuid::Uuid>,
     #[getset(get = "pub")]
-    name: String,
+    name: Option<String>,
     #[getset(get = "pub")]
-    price: Money,
+    price: Option<Money>,
 }
 
-impl<ID: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq> Product<ID> {
-    pub fn new(id: ID, name: String, price: Money) -> Self {
+impl Product {
+    pub fn new(id: ProductId<uuid::Uuid>, name: Option<String>, price: Option<Money>) -> Self {
         Self { id, name, price }
     }
-    pub fn update_with_confirmed_name_and_price(&mut self, name: &String, price: &Money) {
+    pub fn update_with_confirmed_name_and_price(&mut self, name: &Option<String>, price: &Option<Money>) {
         self.name = name.clone();
         self.price = price.clone();
     }
 }
 
-impl<ID: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq> BaseEntity<ID> for Product<ID> {
-    fn get_id(&self) -> &ID {
+impl BaseEntity<ProductId<uuid::Uuid>> for Product {
+    fn get_id(&self) -> &ProductId<uuid::Uuid> {
         &self.id
     }
 
-    fn set_id(&mut self, id: ID) {
+    fn set_id(&mut self, id: ProductId<uuid::Uuid>) {
         self.id = id;
     }
 }

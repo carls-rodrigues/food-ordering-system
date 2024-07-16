@@ -1,9 +1,8 @@
 use bigdecimal::BigDecimal;
 use derive_builder::Builder;
 use getset::Getters;
-use order_domain_core::domain::entity::OrderItem;
 use uuid::Uuid;
-
+use crate::domain::dto::create::OrderItemDTO;
 use super::order_address::OrderAddress;
 
 #[derive(Debug, Default, Builder, Getters)]
@@ -15,7 +14,7 @@ pub struct CreateOrderCommand {
     #[getset(get = "pub")]
     price: BigDecimal,
     #[getset(get = "pub")]
-    order_items: Vec<OrderItem>,
+    order_items: Vec<OrderItemDTO>,
     #[getset(get = "pub")]
     order_address: OrderAddress,
 }

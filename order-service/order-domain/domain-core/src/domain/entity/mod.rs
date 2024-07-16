@@ -4,8 +4,8 @@ mod order_item;
 mod product;
 mod restaurant;
 
-pub use customer::Customer;
+pub use customer::*;
 pub use order::*;
-pub use order_item::OrderItem;
-pub use product::Product;
-pub use restaurant::Restaurant;
+pub use order_item::*;
+pub use product::*;
+pub use restaurant::*;

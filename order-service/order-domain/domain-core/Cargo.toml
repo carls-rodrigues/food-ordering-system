@@ -13,3 +13,5 @@ bigdecimal = "0.4.5"
 chrono = { version = "0.4.38", features = ["serde"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
+derive_builder = "0.20.0"
+serde = { version = "1.0.204", features = ["derive"] }

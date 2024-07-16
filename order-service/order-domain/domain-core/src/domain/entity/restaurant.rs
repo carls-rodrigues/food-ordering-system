@@ -1,27 +1,27 @@
+use derive_builder::Builder;
 use common::domain::{
     entity::{AggregateRoot, BaseEntity},
     value_object::{BaseId, RestaurantId},
 };
 use getset::Getters;
-
 use super::Product;
 
-#[derive(Debug, Getters)]
+#[derive(Debug, Builder, Getters, Clone)]
 pub struct Restaurant {
     id: RestaurantId<uuid::Uuid>,
     #[getset(get = "pub")]
-    products: Vec<Product<uuid::Uuid>>,
+    products: Vec<Product>,
     #[getset(get = "pub")]
     active: bool,
 }
 
 impl Restaurant {
-    pub fn new(products: Vec<Product<uuid::Uuid>>, active: bool) -> Self {
+    pub fn new(products: Vec<Product>, active: bool) -> Self {
         Restaurant::from(RestaurantId::new(uuid::Uuid::now_v7()), products, active)
     }
     pub fn from(
         id: RestaurantId<uuid::Uuid>,
-        products: Vec<Product<uuid::Uuid>>,
+        products: Vec<Product>,
         active: bool,
     ) -> Self {
         Self {

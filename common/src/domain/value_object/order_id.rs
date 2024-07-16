@@ -1,6 +1,6 @@
 use super::base_id::BaseId;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, Default, PartialEq, Clone)]
 pub struct OrderId<T>
 where
     T: From<uuid::Uuid> + Into<uuid::Uuid>,

@@ -1,6 +1,6 @@
 use super::base_id::BaseId;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct ProductId<T>
 where
     T: From<uuid::Uuid> + Into<uuid::Uuid> + PartialEq,
