@@ -1,1 +1,2 @@
 mod order_application_service;
+pub use order_application_service::OrderApplicationService;

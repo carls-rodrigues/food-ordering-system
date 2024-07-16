@@ -3,7 +3,7 @@ use crate::domain::dto::{
     track::{TrackOrderQuery, TrackOrderResponse},
 };
 
-pub trait OderApplicationService {
+pub trait OrderApplicationService {
     fn create_order(
         &self,
         create_order_command: CreateOrderCommand,
