@@ -5,5 +5,6 @@ use uuid::Uuid;
 
 #[derive(Default, Debug, Builder, Getters, Deserialize)]
 pub struct TrackOrderQuery {
+    #[getset(get = "pub")]
     order_tracking_id: Uuid,
 }

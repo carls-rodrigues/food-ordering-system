@@ -4,6 +4,7 @@ use crate::domain::ports::output::repository::{
     CustomerRepository, OrderRepository, RestaurantRepository,
 };
 use common::domain::entity::BaseEntity;
+use common::domain::exception::DomainException;
 use common::domain::value_object::BaseId;
 use order_domain_core::domain::entity::{Order, Restaurant};
 use order_domain_core::domain::event::OrderCreatedEvent;
@@ -38,7 +39,7 @@ impl OrderCreateHelper {
     pub async fn persist_order(
         &self,
         create_order_command: CreateOrderCommand,
-    ) -> Result<OrderCreatedEvent, OrderDomainException> {
+    ) -> Result<OrderCreatedEvent, DomainException<OrderDomainException>> {
         self.check_customer(create_order_command.customer_id())
             .await?;
         let restaurant = self.check_restaurant(&create_order_command).await?;
@@ -55,11 +56,16 @@ impl OrderCreateHelper {
         );
         Ok(order_created_event)
     }
-    async fn check_customer(&self, customer_id: &Uuid) -> Result<(), OrderDomainException> {
+    async fn check_customer(
+        &self,
+        customer_id: &Uuid,
+    ) -> Result<(), DomainException<OrderDomainException>> {
         let customer = self.customer_repository.find_customer(customer_id).await?;
         if customer.is_none() {
             let message = format!("Could not find customer with customer_id: {}", customer_id);
-            return Err(OrderDomainException::new(message, None));
+            return Err(DomainException::DomainError(OrderDomainException::new(
+                message, None,
+            )));
         }
         Ok(())
     }
@@ -67,7 +73,7 @@ impl OrderCreateHelper {
     async fn check_restaurant(
         &self,
         create_order_command: &CreateOrderCommand,
-    ) -> Result<Restaurant, OrderDomainException> {
+    ) -> Result<Restaurant, DomainException<OrderDomainException>> {
         let restaurant_mapped = self
             .order_data_mapper
             .create_order_command_to_restaurant(create_order_command);
@@ -84,11 +90,16 @@ impl OrderCreateHelper {
                 "Could not find restaurant with restaurant_id: {}",
                 create_order_command.restaurant_id()
             );
-            return Err(OrderDomainException::new(message, None));
+            return Err(DomainException::DomainError(OrderDomainException::new(
+                message, None,
+            )));
         }
         Ok(restaurant.unwrap())
     }
-    async fn save_order(&self, order: Order) -> Result<Order, OrderDomainException> {
+    async fn save_order(
+        &self,
+        order: Order,
+    ) -> Result<Order, DomainException<OrderDomainException>> {
         let order_result = self.order_repository.save(order).await?;
         tracing::info!(
             "Order created with order_id: {}",

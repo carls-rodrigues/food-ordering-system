@@ -1,13 +1,17 @@
 use common::domain::exception::DomainException;
 
-pub struct OrderDomainException {
+pub enum OrderDomainException {
+    OrderNotFoundException(OrderNotFoundException),
+}
+
+pub struct OrderNotFoundException {
     message: String,
     description: Option<String>,
     cause: Option<String>,
     source: Option<String>,
 }
 
-impl OrderDomainException {
+impl OrderNotFoundException {
     pub fn new(message: String, description: Option<String>) -> Self {
         Self {
             message,

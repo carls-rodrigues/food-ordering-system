@@ -11,3 +11,4 @@ serde = { version = "1.0.204", features = ["derive"] }
 thiserror = "1.0.62"
 uuid = { version = "1.10.0", features = ["v7", "serde"] }
 async-trait = "0.1.81"
+getset = "0.1.2"

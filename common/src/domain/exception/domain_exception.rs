@@ -1,13 +1,8 @@
-use std::io::ErrorKind;
+use getset::Getters;
+use thiserror::Error;
 
-pub trait DomainException {
-    fn description(&self) -> &str {
-        "Domain Exception"
-    }
-    fn cause(&self, err: ErrorKind) -> Option<ErrorKind> {
-        Some(err)
-    }
-    // fn source(&self) -> Option<&(Error + 'static)> {
-    //     None
-    // }
+#[derive(Error, Debug)]
+pub enum DomainException<T> {
+    NotFound(T),
+    DomainError(T),
 }

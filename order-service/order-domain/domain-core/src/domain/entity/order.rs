@@ -1,14 +1,14 @@
+use crate::domain::{
+    exception::OrderDomainException,
+    value_object::{OrderItemId, StreetAddress, TrackingId},
+};
+use common::domain::exception::DomainException;
 use common::domain::{
     entity::{AggregateRoot, BaseEntity},
     value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, RestaurantId},
 };
 use derive_builder::Builder;
 use getset::{Getters, MutGetters};
-
-use crate::domain::{
-    exception::OrderDomainException,
-    value_object::{OrderItemId, StreetAddress, TrackingId},
-};
 
 use super::OrderItem;
 
@@ -76,23 +76,23 @@ impl Order {
         }
     }
 
-    pub fn pay(&mut self) -> Result<(), OrderDomainException> {
+    pub fn pay(&mut self) -> Result<(), DomainException<OrderDomainException>> {
         if self.order_status != Some(OrderStatus::Pending) {
-            return Err(OrderDomainException::new(
+            return Err(DomainException::DomainError(OrderDomainException::new(
                 "Order is not in correct state for payment operation!".to_string(),
                 None,
-            ));
+            )));
         }
         self.order_status = Some(OrderStatus::Paid);
         Ok(())
     }
 
-    pub fn approve(&mut self) -> Result<(), OrderDomainException> {
+    pub fn approve(&mut self) -> Result<(), DomainException<OrderDomainException>> {
         if self.order_status != Some(OrderStatus::Paid) {
-            return Err(OrderDomainException::new(
+            return Err(DomainException::DomainError(OrderDomainException::new(
                 "Order is not in correct state for approval operation!".to_string(),
                 None,
-            ));
+            )));
         }
         self.order_status = Some(OrderStatus::Approved);
         Ok(())
@@ -101,26 +101,29 @@ impl Order {
     pub fn init_cancel(
         &mut self,
         failure_message: Vec<String>,
-    ) -> Result<(), OrderDomainException> {
+    ) -> Result<(), DomainException<OrderDomainException>> {
         if self.order_status != Some(OrderStatus::Paid) {
-            return Err(OrderDomainException::new(
+            return Err(DomainException::DomainError(OrderDomainException::new(
                 "Order is not in correct state for initCancel operation!".to_string(),
                 None,
-            ));
+            )));
         }
         self.order_status = Some(OrderStatus::Cancelling);
         self.update_failure_messages(failure_message);
         Ok(())
     }
 
-    pub fn cancel(&mut self, failure_message: Vec<String>) -> Result<(), OrderDomainException> {
+    pub fn cancel(
+        &mut self,
+        failure_message: Vec<String>,
+    ) -> Result<(), DomainException<OrderDomainException>> {
         if !(self.order_status == Some(OrderStatus::Cancelling)
             || self.order_status == Some(OrderStatus::Pending))
         {
-            return Err(OrderDomainException::new(
+            return Err(DomainException::DomainError(OrderDomainException::new(
                 "Order is not in correct state for cancel operation!".to_string(),
                 None,
-            ));
+            )));
         }
         self.order_status = Some(OrderStatus::Cancelled);
         self.update_failure_messages(failure_message);
@@ -141,31 +144,31 @@ impl Order {
         }
     }
 
-    pub fn validate_order(&self) -> Result<(), OrderDomainException> {
+    pub fn validate_order(&self) -> Result<(), DomainException<OrderDomainException>> {
         self.validate_initialize_order()?;
         self.validate_total_price()?;
         self.validate_items_price()?;
         Ok(())
     }
-    fn validate_initialize_order(&self) -> Result<(), OrderDomainException> {
+    fn validate_initialize_order(&self) -> Result<(), DomainException<OrderDomainException>> {
         if self.get_id().get_value().to_string().is_empty() {
-            return Err(OrderDomainException::new(
+            return Err(DomainException::DomainError(OrderDomainException::new(
                 "Order is not in correct state for initialization!".to_string(),
                 None,
-            ));
+            )));
         }
         Ok(())
     }
-    fn validate_total_price(&self) -> Result<(), OrderDomainException> {
+    fn validate_total_price(&self) -> Result<(), DomainException<OrderDomainException>> {
         if !self.price.is_greater_than_zero() {
-            return Err(OrderDomainException::new(
+            return Err(DomainException::DomainError(OrderDomainException::new(
                 "Total price must be greater than zero!".to_string(),
                 None,
-            ));
+            )));
         }
         Ok(())
     }
-    fn validate_items_price(&self) -> Result<(), OrderDomainException> {
+    fn validate_items_price(&self) -> Result<(), DomainException<OrderDomainException>> {
         for item in self.items.iter() {
             self.validate_item_price(item)?;
         }
@@ -181,19 +184,26 @@ impl Order {
                     self.price.get_amount(),
                     total.get_amount()
                 );
-                return Err(OrderDomainException::new(message, None));
+                return Err(DomainException::DomainError(OrderDomainException::new(
+                    message, None,
+                )));
             }
         }
         Ok(())
     }
-    fn validate_item_price(&self, order_item: &OrderItem) -> Result<(), OrderDomainException> {
+    fn validate_item_price(
+        &self,
+        order_item: &OrderItem,
+    ) -> Result<(), DomainException<OrderDomainException>> {
         if !order_item.is_price_valid() {
             let message = format!(
                 "Order item price: {} is not valid for the product {}.",
                 order_item.price().get_amount(),
                 order_item.product().get_id().get_value()
             );
-            return Err(OrderDomainException::new(message, None));
+            return Err(DomainException::DomainError(OrderDomainException::new(
+                message, None,
+            )));
         }
         Ok(())
     }

@@ -1,2 +1,2 @@
 mod domain_exception;
-pub use domain_exception::DomainException;
+pub use domain_exception::*;
