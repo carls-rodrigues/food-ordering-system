@@ -1,9 +1,9 @@
+use super::order_address::OrderAddress;
+use crate::domain::dto::create::OrderItemDTO;
 use bigdecimal::BigDecimal;
 use derive_builder::Builder;
 use getset::Getters;
 use uuid::Uuid;
-use crate::domain::dto::create::OrderItemDTO;
-use super::order_address::OrderAddress;
 
 #[derive(Debug, Default, Builder, Getters)]
 pub struct CreateOrderCommand {

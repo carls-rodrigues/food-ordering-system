@@ -1,7 +1,9 @@
 use std::str::FromStr;
 
 use bigdecimal::BigDecimal;
-use common::domain::value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, ProductId, RestaurantId};
+use common::domain::value_object::{
+    BaseId, CustomerId, Money, OrderId, OrderStatus, ProductId, RestaurantId,
+};
 use order_domain_core::domain::{
     entity::{Order, OrderData, OrderItem, Product},
     value_object::{OrderItemId, StreetAddress, TrackingId},

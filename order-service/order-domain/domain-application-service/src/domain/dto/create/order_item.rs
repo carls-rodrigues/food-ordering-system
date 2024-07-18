@@ -1,8 +1,8 @@
 use bigdecimal::BigDecimal;
+use common::domain::value_object::ProductId;
 use derive_builder::Builder;
 use getset::Getters;
 use uuid::Uuid;
-use common::domain::value_object::ProductId;
 
 #[derive(Debug, Builder, Getters, Clone)]
 pub struct OrderItemDTO {

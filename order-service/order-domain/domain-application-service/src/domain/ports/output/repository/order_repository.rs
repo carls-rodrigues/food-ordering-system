@@ -1,7 +1,7 @@
 use async_trait::async_trait;
+use order_domain_core::domain::exception::OrderDomainException;
 use order_domain_core::domain::{entity::Order, value_object::TrackingId};
 use uuid::Uuid;
-use order_domain_core::domain::exception::OrderDomainException;
 
 #[async_trait]
 pub trait OrderRepository {
