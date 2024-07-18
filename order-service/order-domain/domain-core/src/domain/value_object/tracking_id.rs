@@ -1,7 +1,8 @@
-use common::domain::value_object::BaseId;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Clone, Serialize, Default)]
+use common::domain::value_object::BaseId;
+
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize, Default)]
 pub struct TrackingId<T>
 where
     T: From<uuid::Uuid> + Into<uuid::Uuid>,
@@ -23,8 +24,9 @@ where
 
 #[cfg(test)]
 mod tracking_id_tests {
-    use super::*;
     use uuid::Uuid;
+
+    use super::*;
 
     #[test]
     fn test_tracking_id() {
