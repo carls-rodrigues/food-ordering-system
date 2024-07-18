@@ -1,5 +1,7 @@
+use async_trait::async_trait;
 use crate::domain::events::DomainEvent;
 
+#[async_trait]
 pub trait DomainEventPublisher<T>: DomainEvent<T> {
-    fn publish(&self, event: T);
+    async fn publish(&self, event: &T);
 }
