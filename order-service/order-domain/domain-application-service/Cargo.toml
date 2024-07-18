@@ -7,6 +7,9 @@ license.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[test]]
+name = "test_order_application_service"
+path = "test/order_test_configuration.rs"
 
 [dependencies]
 order-domain-core = { path = "../domain-core" }
@@ -21,3 +24,7 @@ derive_builder = "0.20.0"
 serde = { version = "1.0.204", features = ["derive"] }
 validator = { version = "0.18.1", features = ["derive"] }
 async-trait = "0.1.81"
+
+
+[dev-dependencies]
+mockall = "0.12.1"
