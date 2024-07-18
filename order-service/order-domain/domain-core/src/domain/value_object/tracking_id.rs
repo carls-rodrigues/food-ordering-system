@@ -1,7 +1,7 @@
 use common::domain::value_object::BaseId;
 use serde::Serialize;
 
-#[derive(Debug, PartialEq, Clone, Serialize)]
+#[derive(Debug, PartialEq, Clone, Serialize, Default)]
 pub struct TrackingId<T>
 where
     T: From<uuid::Uuid> + Into<uuid::Uuid>,

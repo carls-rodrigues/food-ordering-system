@@ -7,6 +7,7 @@ use order_domain_core::domain::entity::{
 };
 use order_domain_core::domain::value_object::StreetAddress;
 use uuid::Uuid;
+use crate::domain::dto::track::{TrackOrderResponse, TrackOrderResponseBuilder};
 
 #[derive(Debug, Default)]
 pub struct OrderDataMapper {}
@@ -63,6 +64,20 @@ impl OrderDataMapper {
                     .clone(),
             )
             .message(message)
+            .build()
+            .unwrap()
+    }
+    pub fn order_to_track_order_response(&self, order: &Order) -> TrackOrderResponse {
+        TrackOrderResponseBuilder::default()
+            .order_tracking_id(order.tracking_id().clone().unwrap())
+            .order_status(
+                order
+                    .order_status()
+                    .clone()
+                    .unwrap_or(OrderStatus::Pending)
+                    .clone(),
+            )
+            .failure_message(order.failure_messages().clone())
             .build()
             .unwrap()
     }

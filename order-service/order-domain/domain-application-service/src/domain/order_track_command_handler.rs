@@ -43,6 +43,6 @@ impl OrderTrackCommandHandler {
         }
         Ok(self
             .order_data_mapper
-            .order_to_create_order_response(&order.unwrap(), None))
+            .order_to_track_order_response(&order.unwrap()))
     }
 }
