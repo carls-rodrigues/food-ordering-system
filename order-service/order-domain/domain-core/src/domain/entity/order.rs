@@ -1,8 +1,8 @@
-use derive_builder::Builder;
 use common::domain::{
     entity::{AggregateRoot, BaseEntity},
     value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, RestaurantId},
 };
+use derive_builder::Builder;
 use getset::{Getters, MutGetters};
 
 use crate::domain::{

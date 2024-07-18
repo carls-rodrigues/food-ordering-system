@@ -1,9 +1,9 @@
 use common::domain::value_object::OrderStatus;
 use derive_builder::Builder;
 use getset::Getters;
+use order_domain_core::domain::value_object::TrackingId;
 use serde::Serialize;
 use uuid::Uuid;
-use order_domain_core::domain::value_object::TrackingId;
 
 #[derive(Debug, Default, Builder, Getters, Serialize)]
 pub struct CreateOrderResponse {

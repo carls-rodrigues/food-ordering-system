@@ -1,9 +1,6 @@
 use std::collections::HashMap;
 
-use common::domain::{
-    entity::BaseEntity,
-    value_object::{BaseId},
-};
+use common::domain::{entity::BaseEntity, value_object::BaseId};
 
 use super::{
     entity::{Order, Product, Restaurant},
@@ -42,7 +39,8 @@ impl OrderDomainServiceImpl {
             .collect::<HashMap<&uuid::Uuid, Product>>();
 
         for order_item in order.items_mut() {
-            if let Some(restaurant_product) = restaurant_products.get(order_item.product().get_id().get_value())
+            if let Some(restaurant_product) =
+                restaurant_products.get(order_item.product().get_id().get_value())
             {
                 order_item
                     .product_mut()

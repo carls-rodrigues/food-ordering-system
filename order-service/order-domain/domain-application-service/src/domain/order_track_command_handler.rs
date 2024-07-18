@@ -1,5 +1,5 @@
-use order_domain_core::domain::exception::OrderDomainException;
 use crate::domain::dto::track::{TrackOrderQuery, TrackOrderResponse};
+use order_domain_core::domain::exception::OrderDomainException;
 
 pub struct OrderTrackCommandHandler {}
 impl OrderTrackCommandHandler {
@@ -7,7 +7,10 @@ impl OrderTrackCommandHandler {
         Self {}
     }
 
-    pub async fn track_order(&self, track_order_query: TrackOrderQuery) -> Result<TrackOrderResponse, OrderDomainException> {
+    pub async fn track_order(
+        &self,
+        track_order_query: TrackOrderQuery,
+    ) -> Result<TrackOrderResponse, OrderDomainException> {
         todo!()
     }
 }

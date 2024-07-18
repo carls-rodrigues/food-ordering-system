@@ -1,6 +1,6 @@
+use common::domain::value_object::ProductId;
 use common::domain::{entity::BaseEntity, value_object::Money};
 use getset::Getters;
-use common::domain::value_object::ProductId;
 
 #[derive(Debug, Getters, PartialEq, Eq, Hash, Clone)]
 pub struct Product {
@@ -15,7 +15,11 @@ impl Product {
     pub fn new(id: ProductId<uuid::Uuid>, name: Option<String>, price: Option<Money>) -> Self {
         Self { id, name, price }
     }
-    pub fn update_with_confirmed_name_and_price(&mut self, name: &Option<String>, price: &Option<Money>) {
+    pub fn update_with_confirmed_name_and_price(
+        &mut self,
+        name: &Option<String>,
+        price: &Option<Money>,
+    ) {
         self.name = name.clone();
         self.price = price.clone();
     }

@@ -1,13 +1,13 @@
+use crate::domain::value_object::OrderItemId;
 use bigdecimal::BigDecimal;
-use derive_builder::Builder;
+use common::domain::value_object::BaseId;
 use common::domain::{
     entity::BaseEntity,
     value_object::{Money, OrderId},
 };
+use derive_builder::Builder;
 use getset::{Getters, MutGetters};
 use uuid::Uuid;
-use common::domain::value_object::BaseId;
-use crate::domain::value_object::OrderItemId;
 
 use super::Product;
 
@@ -34,7 +34,14 @@ impl OrderItem {
         price: Money,
         subtotal: Money,
     ) -> Self {
-        Self::from(OrderItemId::new(Uuid::now_v7()), order_id, product, quantity, price, subtotal)
+        Self::from(
+            OrderItemId::new(Uuid::now_v7()),
+            order_id,
+            product,
+            quantity,
+            price,
+            subtotal,
+        )
     }
     pub fn from(
         id: OrderItemId<Uuid>,
