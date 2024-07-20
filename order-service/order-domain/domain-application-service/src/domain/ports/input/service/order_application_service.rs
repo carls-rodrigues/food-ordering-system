@@ -4,16 +4,17 @@ use crate::domain::dto::{
     track::{TrackOrderQuery, TrackOrderResponse},
 };
 use async_trait::async_trait;
-use order_domain_core::domain::exception::OrderDomainException;
+use common::domain::exception::DomainException;
+use order_domain_core::domain::exception::{OrderDomainException, OrderNotFoundException};
 
 #[async_trait(?Send)]
 pub trait OrderApplicationService {
     async fn create_order(
         &self,
         create_order_command: CreateOrderCommand,
-    ) -> Result<CreateOrderResponse, OrderDomainException>;
+    ) -> Result<CreateOrderResponse, DomainException<OrderDomainException>>;
     async fn track_order(
         &self,
         track_order_query: TrackOrderQuery,
-    ) -> Result<TrackOrderResponse, OrderDomainException>;
+    ) -> Result<TrackOrderResponse, DomainException<OrderNotFoundException>>;
 }

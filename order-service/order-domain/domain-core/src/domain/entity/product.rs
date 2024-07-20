@@ -1,8 +1,9 @@
 use common::domain::value_object::ProductId;
 use common::domain::{entity::BaseEntity, value_object::Money};
+use derive_builder::Builder;
 use getset::Getters;
 
-#[derive(Debug, Getters, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Builder, Getters, PartialEq, Eq, Hash, Clone)]
 pub struct Product {
     id: ProductId<uuid::Uuid>,
     #[getset(get = "pub")]

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use common::domain::{entity::BaseEntity, value_object::BaseId};
-
 use super::{
     entity::{Order, Product, Restaurant},
     event::{OrderCancelledEvent, OrderCreatedEvent, OrderPaidEvent},
     exception::OrderDomainException,
     order_domain_service::OrderDomainService,
 };
+use common::domain::exception::DomainException;
+use common::domain::{entity::BaseEntity, value_object::BaseId};
 
 #[derive(Debug, Default)]
 pub struct OrderDomainServiceImpl {}
@@ -17,13 +17,18 @@ impl OrderDomainServiceImpl {
         Self {}
     }
 
-    fn validate_restaurant(&self, restaurant: &Restaurant) -> Result<(), OrderDomainException> {
+    fn validate_restaurant(
+        &self,
+        restaurant: &Restaurant,
+    ) -> Result<(), DomainException<OrderDomainException>> {
         if !restaurant.active() {
             let message = format!(
                 "Restaurant with id {} is currently not active",
                 restaurant.get_id().get_value()
             );
-            return Err(OrderDomainException::new(message, None));
+            return Err(DomainException::DomainError(OrderDomainException::new(
+                message, None,
+            )));
         }
         Ok(())
     }
@@ -31,7 +36,7 @@ impl OrderDomainServiceImpl {
         &self,
         order: &mut Order,
         restaurant: &Restaurant,
-    ) -> Result<(), OrderDomainException> {
+    ) -> Result<(), DomainException<OrderDomainException>> {
         let restaurant_products = restaurant
             .products()
             .iter()
@@ -70,7 +75,7 @@ impl OrderDomainService for OrderDomainServiceImpl {
         &self,
         mut order: Order,
         restaurant: Restaurant,
-    ) -> Result<OrderCreatedEvent, OrderDomainException> {
+    ) -> Result<OrderCreatedEvent, DomainException<OrderDomainException>> {
         self.validate_restaurant(&restaurant)?;
         self.set_order_product_information(&mut order, &restaurant)?;
         order.validate_order()?;
@@ -79,13 +84,19 @@ impl OrderDomainService for OrderDomainServiceImpl {
         Ok(OrderCreatedEvent::new(order))
     }
 
-    fn pay_order(&self, order: &mut Order) -> Result<OrderPaidEvent, OrderDomainException> {
+    fn pay_order(
+        &self,
+        order: &mut Order,
+    ) -> Result<OrderPaidEvent, DomainException<OrderDomainException>> {
         order.pay()?;
         tracing::info!("Order with id {} is paid", order.get_id().get_value());
         Ok(OrderPaidEvent::new(order.clone()))
     }
 
-    fn approve_order(&self, order: &mut Order) -> Result<(), OrderDomainException> {
+    fn approve_order(
+        &self,
+        order: &mut Order,
+    ) -> Result<(), DomainException<OrderDomainException>> {
         order.approve()?;
         tracing::info!("Order with id {} is approved", order.get_id().get_value());
         Ok(())
@@ -95,7 +106,7 @@ impl OrderDomainService for OrderDomainServiceImpl {
         &self,
         order: &mut Order,
         failure_messages: Vec<String>,
-    ) -> Result<OrderCancelledEvent, OrderDomainException> {
+    ) -> Result<OrderCancelledEvent, DomainException<OrderDomainException>> {
         order.init_cancel(failure_messages)?;
         tracing::info!(
             "Order payment is cancelling for order id: {}",
@@ -108,7 +119,7 @@ impl OrderDomainService for OrderDomainServiceImpl {
         &self,
         order: &mut Order,
         failure_messages: Vec<String>,
-    ) -> Result<(), OrderDomainException> {
+    ) -> Result<(), DomainException<OrderDomainException>> {
         order.cancel(failure_messages)?;
         tracing::info!("Order with id {} is cancelled", order.get_id().get_value());
         Ok(())

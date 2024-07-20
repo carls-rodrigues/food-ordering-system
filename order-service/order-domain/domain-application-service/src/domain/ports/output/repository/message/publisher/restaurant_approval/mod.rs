@@ -1,1 +1,3 @@
+pub use order_paid_restaurant_request_message_publisher::*;
+
 mod order_paid_restaurant_request_message_publisher;

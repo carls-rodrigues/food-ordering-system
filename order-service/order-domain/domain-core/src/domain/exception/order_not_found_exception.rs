@@ -1,7 +1,7 @@
 use getset::Getters;
 
-#[derive(Debug, Getters, PartialEq, Clone)]
-pub struct OrderDomainException {
+#[derive(Debug, Getters)]
+pub struct OrderNotFoundException {
     #[getset(get = "pub")]
     message: String,
     #[getset(get = "pub")]
@@ -12,7 +12,7 @@ pub struct OrderDomainException {
     source: Option<String>,
 }
 
-impl OrderDomainException {
+impl OrderNotFoundException {
     pub fn new(message: String, description: Option<String>) -> Self {
         Self {
             message,

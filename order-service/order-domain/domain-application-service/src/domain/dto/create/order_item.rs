@@ -4,7 +4,7 @@ use derive_builder::Builder;
 use getset::Getters;
 use uuid::Uuid;
 
-#[derive(Debug, Builder, Getters, Clone)]
+#[derive(Debug, Builder, Getters, Clone, PartialEq)]
 pub struct OrderItemDTO {
     #[getset(get = "pub")]
     product_id: ProductId<Uuid>,

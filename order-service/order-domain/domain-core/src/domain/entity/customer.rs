@@ -3,8 +3,14 @@ use common::domain::{
     value_object::CustomerId,
 };
 
+#[derive(Debug, Clone)]
 pub struct Customer {
     id: CustomerId<uuid::Uuid>,
+}
+impl Customer {
+    pub fn new(id: CustomerId<uuid::Uuid>) -> Self {
+        Self { id }
+    }
 }
 
 impl AggregateRoot<CustomerId<uuid::Uuid>> for Customer {}
