@@ -5,7 +5,7 @@ use derive_builder::Builder;
 use getset::Getters;
 use uuid::Uuid;
 
-#[derive(Debug, Default, Builder, Getters)]
+#[derive(Debug, Default, Builder, Getters, PartialEq)]
 pub struct CreateOrderCommand {
     #[getset(get = "pub")]
     customer_id: Uuid,

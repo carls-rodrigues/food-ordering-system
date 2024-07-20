@@ -20,10 +20,13 @@ mod order_test_configuration {
     use order_domain_core::domain::order_domain_service::OrderDomainService;
     use order_domain_core::domain::order_domain_service_impl::OrderDomainServiceImpl;
     use common::domain::value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, ProductId, RestaurantId};
-    use order_domain_core::domain::entity::{Customer, Order, Product, Restaurant};
+    use order_domain_core::domain::entity::{Customer, Order, Product, Restaurant, RestaurantBuilder};
     use uuid::Uuid;
 
-    use mockall::{mock, predicate::*};
+    use mockall::{
+        mock,
+        predicate::{self, *},
+    };
 
     // const PRICE: BigDecimal = BigDecimal::from_str("100.00").unwrap();
 
@@ -54,7 +57,7 @@ mod order_test_configuration {
     mock! {
       pub RestaurantRepository {}
 
-      #[async_trait]
+      #[async_trait(?Send)]
         impl RestaurantRepository for RestaurantRepository {
             async fn find_restaurant_information(
                 &self,
@@ -325,7 +328,6 @@ mod order_test_configuration {
         );
         assert_ne!(create_order_response.order_tracking_id(), &None);
     }
-
     #[tokio::test]
     async fn test_create_order_with_wrong_total_price() {
         let mut output = before_each();
@@ -352,7 +354,6 @@ mod order_test_configuration {
             DomainException::DomainError(OrderDomainException::new("any_error".to_string(), None))
         );
     }
-
     #[tokio::test]
     async fn test_create_order_with_wrong_product_price() {
         let mut output = before_each();
@@ -378,5 +379,33 @@ mod order_test_configuration {
             create_order_response.unwrap_err(),
             DomainException::DomainError(OrderDomainException::new("any_error".to_string(), None))
         );
+    }
+    #[tokio::test]
+    async fn test_create_order_with_passive_restaurant() {
+        let mut output = before_each();
+        let order_data_mapper = output.order_data_mapper;
+        let restaurant_response = RestaurantBuilder::default()
+            .id(RestaurantId::new(Uuid::now_v7()))
+            .products(vec![
+                Product::new(
+                    ProductId::new(Uuid::now_v7()),
+                    Some("product-1".to_string()),
+                    Some(Money::new(BigDecimal::from_str("50.00").unwrap())),
+                ),
+                Product::new(
+                    ProductId::new(Uuid::now_v7()),
+                    Some("product-2".to_string()),
+                    Some(Money::new(BigDecimal::from_str("50.00").unwrap())),
+                ),
+            ])
+            .active(false)
+            .build()
+            .unwrap();
+
+        output
+            .mock_restaurant_repository
+            .expect_find_restaurant_information()
+            .times(1)
+            .returning(move |_| Ok(Some(restaurant_response.clone())));
     }
 }

@@ -6,7 +6,7 @@ use common::domain::{
 use derive_builder::Builder;
 use getset::Getters;
 
-#[derive(Debug, Builder, Getters, Clone)]
+#[derive(Debug, Builder, Getters, Clone, PartialEq)]
 pub struct Restaurant {
     id: RestaurantId<uuid::Uuid>,
     #[getset(get = "pub")]

@@ -9,5 +9,8 @@ pub mod ports;
 mod restaurant_approval_response_message_listener_impl;
 
 pub use order_application_service_impl::*;
+pub use order_create_command_handler::*;
 pub use order_create_helper::*;
+pub use order_track_command_handler::*;
+pub use payment_response_message_listener_impl::*;
 pub use restaurant_approval_response_message_listener_impl::*;

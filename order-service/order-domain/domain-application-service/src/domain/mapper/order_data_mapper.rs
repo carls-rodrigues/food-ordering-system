@@ -9,7 +9,7 @@ use order_domain_core::domain::entity::{
 use order_domain_core::domain::value_object::{OrderItemId, StreetAddress, TrackingId};
 use uuid::Uuid;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct OrderDataMapper {}
 
 impl OrderDataMapper {
