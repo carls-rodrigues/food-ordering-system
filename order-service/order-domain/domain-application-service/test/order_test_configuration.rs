@@ -352,4 +352,31 @@ mod order_test_configuration {
             DomainException::DomainError(OrderDomainException::new("any_error".to_string(), None))
         );
     }
+
+    #[tokio::test]
+    async fn test_create_order_with_wrong_product_price() {
+        let mut output = before_each();
+
+        output
+            .mock_order_application_service
+            .expect_create_order()
+            .times(1)
+            .return_once(move |_| {
+                Err(DomainException::DomainError(OrderDomainException::new(
+                    "any_error".to_string(),
+                    None,
+                )))
+            });
+
+        let create_order_response = output
+            .mock_order_application_service
+            .create_order(output.create_order_command_wrong_product_price.unwrap())
+            .await;
+
+        assert!(create_order_response.is_err());
+        assert_eq!(
+            create_order_response.unwrap_err(),
+            DomainException::DomainError(OrderDomainException::new("any_error".to_string(), None))
+        );
+    }
 }

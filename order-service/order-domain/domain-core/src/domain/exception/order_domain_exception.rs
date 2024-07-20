@@ -1,6 +1,6 @@
 use getset::Getters;
 
-#[derive(Debug, Getters, PartialEq)]
+#[derive(Debug, Getters, PartialEq, Clone)]
 pub struct OrderDomainException {
     #[getset(get = "pub")]
     message: String,
