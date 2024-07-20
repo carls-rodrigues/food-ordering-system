@@ -8,7 +8,7 @@ use common::domain::{
     value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, RestaurantId},
 };
 use derive_builder::Builder;
-use getset::{Getters, MutGetters};
+use getset::{Getters, MutGetters, Setters};
 
 use super::OrderItem;
 

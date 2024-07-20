@@ -29,7 +29,7 @@ impl OrderTrackCommandHandler {
         let order = self
             .order_repository
             .find_by_tracking_id(TrackingId::new(
-                track_order_query.order_tracking_id().clone(),
+                track_order_query.order_tracking_id().to_owned(),
             ))
             .await?;
         if order.is_none() {

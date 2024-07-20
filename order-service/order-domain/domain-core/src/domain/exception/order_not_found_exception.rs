@@ -1,13 +1,14 @@
-use common::domain::exception::DomainException;
+use getset::Getters;
 
-pub enum OrderDomainException {
-    OrderNotFoundException(OrderNotFoundException),
-}
-
+#[derive(Debug, Getters)]
 pub struct OrderNotFoundException {
+    #[getset(get = "pub")]
     message: String,
+    #[getset(get = "pub")]
     description: Option<String>,
+    #[getset(get = "pub")]
     cause: Option<String>,
+    #[getset(get = "pub")]
     source: Option<String>,
 }
 

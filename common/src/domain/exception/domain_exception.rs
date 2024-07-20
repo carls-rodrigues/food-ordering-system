@@ -1,7 +1,6 @@
-use getset::Getters;
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub enum DomainException<T> {
     NotFound(T),
     DomainError(T),

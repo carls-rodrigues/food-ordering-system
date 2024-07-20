@@ -1,9 +1,14 @@
-use common::domain::exception::DomainException;
+use getset::Getters;
 
+#[derive(Debug, Getters, PartialEq)]
 pub struct OrderDomainException {
+    #[getset(get = "pub")]
     message: String,
+    #[getset(get = "pub")]
     description: Option<String>,
+    #[getset(get = "pub")]
     cause: Option<String>,
+    #[getset(get = "pub")]
     source: Option<String>,
 }
 

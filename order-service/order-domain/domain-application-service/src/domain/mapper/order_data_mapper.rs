@@ -2,11 +2,11 @@ use crate::domain::dto::create::{
     CreateOrderCommand, CreateOrderResponse, CreateOrderResponseBuilder, OrderAddress, OrderItemDTO,
 };
 use crate::domain::dto::track::{TrackOrderResponse, TrackOrderResponseBuilder};
-use common::domain::value_object::{BaseId, CustomerId, Money, OrderStatus, RestaurantId};
+use common::domain::value_object::{BaseId, CustomerId, Money, OrderId, OrderStatus, RestaurantId};
 use order_domain_core::domain::entity::{
     Order, OrderBuilder, OrderItem, OrderItemBuilder, Product, Restaurant, RestaurantBuilder,
 };
-use order_domain_core::domain::value_object::StreetAddress;
+use order_domain_core::domain::value_object::{OrderItemId, StreetAddress, TrackingId};
 use uuid::Uuid;
 
 #[derive(Debug, Default)]
@@ -23,7 +23,7 @@ impl OrderDataMapper {
     ) -> Restaurant {
         RestaurantBuilder::default()
             .id(RestaurantId::new(
-                create_order_commander.restaurant_id().clone(),
+                create_order_commander.restaurant_id().to_owned(),
             ))
             .products(self.create_products(create_order_commander.order_items().clone()))
             .build()
@@ -34,11 +34,15 @@ impl OrderDataMapper {
         create_order_commander: &CreateOrderCommand,
     ) -> Order {
         OrderBuilder::default()
+            .id(OrderId::new(Uuid::now_v7()))
+            .tracking_id(Some(TrackingId::new(Uuid::now_v7())))
+            .order_status(None)
+            .failure_messages(vec![])
             .customer_id(CustomerId::new(
-                create_order_commander.customer_id().clone(),
+                create_order_commander.customer_id().to_owned(),
             ))
             .restaurant_id(RestaurantId::new(
-                create_order_commander.restaurant_id().clone(),
+                create_order_commander.restaurant_id().to_owned(),
             ))
             .street_address(
                 self.order_address_to_street_address(create_order_commander.order_address()),
@@ -83,12 +87,14 @@ impl OrderDataMapper {
     }
     fn order_items_to_order_item_entities(&self, order_items: &[OrderItemDTO]) -> Vec<OrderItem> {
         order_items
-            .into_iter()
+            .iter()
             .map(|order_item| {
                 OrderItemBuilder::default()
+                    .id(OrderItemId::new(Uuid::now_v7()))
+                    .order_id(None)
                     .product(Product::new(order_item.product_id().clone(), None, None))
                     .price(Money::new(order_item.price().clone()))
-                    .quantity(order_item.quantity().clone())
+                    .quantity(order_item.quantity().to_owned())
                     .subtotal(Money::new(order_item.subtotal().clone()))
                     .build()
                     .unwrap()

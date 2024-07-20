@@ -1,18 +1,12 @@
 use crate::domain::dto::create::{CreateOrderCommand, CreateOrderResponse};
 use crate::domain::mapper::OrderDataMapper;
 use crate::domain::ports::output::repository::message::publisher::payment::OrderCreatedPaymentRequestMessagePublisher;
-use crate::domain::ports::output::repository::{
-    CustomerRepository, OrderRepository, RestaurantRepository,
-};
 use crate::domain::OrderCreateHelper;
 use common::domain::entity::BaseEntity;
 use common::domain::exception::DomainException;
 use common::domain::value_object::BaseId;
-use order_domain_core::domain::entity::{Order, Restaurant};
 use order_domain_core::domain::exception::OrderDomainException;
-use order_domain_core::domain::order_domain_service::OrderDomainService;
 use std::sync::Arc;
-use uuid::Uuid;
 
 pub struct OrderCreateCommandHandler {
     order_create_helper: Arc<OrderCreateHelper>,
@@ -54,6 +48,6 @@ impl OrderCreateCommandHandler {
             .await;
         Ok(self
             .order_data_mapper
-            .order_to_create_order_response(&order_created_event.order(), None))
+            .order_to_create_order_response(order_created_event.order(), None))
     }
 }
